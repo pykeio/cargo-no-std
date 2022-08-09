@@ -1,54 +1,26 @@
-## cargo nono - Detect (possible) no_std compatibility of your crate and dependencies
+## `cargo no-std`: Check which dependencies are & aren't no_std compatible
+`cargo no-std` spits out a nice overview of whether your dependencies are `no_std` compatible.
 
-## Motivation
-
-From embedded programming, over smart contracts in Rust, to general cross-platform portable crates, `#![no_std]` crates are becoming more and more widespread.
-However it is currently a very cumbersome process to find out if and why (not) a crate is compatible with `no_std` usage, and often requires a lengthy trial and error process, and digging through the source of all your dependencies.
-
-**cargo nono** tries to aid you in navigating the current minefield that is `no_std` usage, and it's biggest "no no"s.
+```
+carson@desktop:~/example$ cargo no-std
+✅ example
+❓ bincode
+  ❯ Source code contains an explicit `use std::` statement.
+   → /home/carson/.cargo/registry/src/github.com-1ecc6299db9ec823/bincode-2.0.0-rc.1/src/features/impl_std.rs
+✅ num-traits
+❌ rayon
+  ❯ Did not find a #![no_std] attribute or a simple conditional attribute like #![cfg_attr(not(feature = "std"), no_std)] in the crate source. Crate most likely doesn't support no_std without changes.
+❓ tracing
+  ★ Crate supports no_std if "std" feature is deactivated.
+    ❯ Caused by feature flag "std" in crate "tracing:0.1.35"
+      ❯ Caused by feature flag "default" in crate "tracing:0.1.35"
+        ❯ Caused by implicitly enabled default feature from "ml2:1.0.0-dev.20220511"
+```
 
 ## Installation
-
-### Prebuilt binaries
-
-`cargo-nono` also comes as prebuilt binaries (useful for CI):
-
 ```bash
-curl -LSfs https://japaric.github.io/trust/install.sh | \
-    sh -s -- --git hobofan/cargo-nono
+$ cargo install cargo-no-std
 ```
-
-### From crates.io
-
-```bash
-cargo install cargo-nono
-# For warnings with more informative messages install like this
-RUSTFLAGS="--cfg procmacro2_semver_exempt" cargo install cargo-nono
-```
-
-## Demo
-
-[![asciicast](https://asciinema.org/a/212278.svg)](https://asciinema.org/a/212278)
-
-## Usage
-
-Run in the crate directory you want to check:
-
-```
-cargo nono check
-```
-
-The `cargo nono check` subcommand also understands the `--no-default-features` and `--features <FEATURES>` flags to help in conditional `no_std` setups.
-
-## Features
-
-- Tries to infer `no_std` compatibility in dependencies by looking for a `#![no_std]` attribute or the often used conditional `#![cfg_attr(not(feature = "std"), no_std)]`
-- Helps in pinpointing which dependencies and feature flags activate `std` feature flags
-- Warn of `use std::` statements in code
-
-### Planned features
-
-- Warn of `[build-dependencies]` features bleeding over: [cargo#5730](https://github.com/rust-lang/cargo/issues/5730)
 
 ## License
 

@@ -1,28 +1,37 @@
 [package]
-name = "cargo-nono"
-version = "0.1.9"
-authors = ["Maximilian Goisser <goisser94@gmail.com>"]
-description = "Detect (possible) no_std compatibility of your crate and dependencies"
-keywords = ["cargo", "no_std", "nono", "subcommand"]
+name = "cargo-no-std"
+version = "1.0.0"
+authors = [ "Carson M. <carson@pyke.io>", "Maximilian Goisser <goisser94@gmail.com>" ]
+description = "Check which dependencies are & aren't no_std compatible"
+keywords = [ "cargo", "no_std", "subcommand" ]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/hobofan/cargo-nono"
-documentation = "https://github.com/hobofan/cargo-nono"
+repository = "https://github.com/pykeio/cargo-no-std"
+documentation = "https://github.com/pykeio/cargo-no-std"
 edition = "2018"
 
 [dependencies]
-cargo_metadata = "0.8.2"
-serde = "1.0.99"
-serde_json = "1.0.40"
-console = "0.7.7"
-clap = "2.33.0"
-glob = "0.3.0"
-syn = { version = "1.0.2", default-features = false, features = ["full", "extra-traits", "parsing"] }
-quote = { version = "1.0.1", default-features = false }
-proc-macro2 = { version = "1.0.1", default-features = false }
+cargo_metadata = "0.15"
+serde = "1.0"
+serde_json = "1.0"
+colored = "2.0"
+itertools = "0.10"
+clap = "3.2"
+glob = "0.3"
+anyhow = "1.0"
+syn = { version = "1.0", default-features = false, features = [ "full", "extra-traits", "parsing", "printing" ] }
+quote = { version = "1.0", default-features = false }
+proc-macro2 = { version = "1.0", default-features = false }
+gimli = "0.26"
+object = "0.29"
+twoway = "0.2"
+goblin = "0.5"
+fallible-iterator = "0.2"
+escargot = "0.5"
+duct = "0.13"
 
 [dev-dependencies]
-assert_cmd = "0.11.1"
+assert_cmd = "2.0"
 
 [features]
 default = []
-proc_macro_spans = []
+proc_macro_spans = [ "proc-macro2/span-locations" ]
