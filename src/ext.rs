@@ -180,7 +180,7 @@ impl PackageExt for Package {
 			.iter()
 			.filter(|dependency| {
 				for feature in activated_features.iter() {
-					if feature.name == dependency.name {
+					if feature.name == dependency.name || (feature.name.starts_with("dep:") && &feature.name[4..] == dependency.name) {
 						return true;
 					}
 				}
