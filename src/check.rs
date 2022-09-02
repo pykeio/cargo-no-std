@@ -24,24 +24,26 @@ impl ConditionalAttribute {
 		let cfg_attr_path: syn::Path = syn::parse_quote!(cfg_attr);
 		#[allow(clippy::collapsible_if)]
 		if attr.path == cfg_attr_path {
-			if let Some(ref first_group_ts) = attr.clone().tokens.into_iter().next() && let TokenTree::Group(group) = first_group_ts {
-                let mut inner_group_stream = group.stream().into_iter();
-                let condition_part_1 = inner_group_stream.next();
-                let condition_part_2 = inner_group_stream.next();
-                inner_group_stream.next();
-                let gated_attr = inner_group_stream.next();
+			if let Some(ref first_group_ts) = attr.clone().tokens.into_iter().next() {
+				if let TokenTree::Group(group) = first_group_ts {
+					let mut inner_group_stream = group.stream().into_iter();
+					let condition_part_1 = inner_group_stream.next();
+					let condition_part_2 = inner_group_stream.next();
+					inner_group_stream.next();
+					let gated_attr = inner_group_stream.next();
 
-                if let Some(TokenTree::Ident(ref gated_attr_ident)) = gated_attr {
-                    let mut condition = proc_macro2::TokenStream::new();
-                    condition.extend(condition_part_1);
-                    condition.extend(condition_part_2);
+					if let Some(TokenTree::Ident(ref gated_attr_ident)) = gated_attr {
+						let mut condition = proc_macro2::TokenStream::new();
+						condition.extend(condition_part_1);
+						condition.extend(condition_part_2);
 
-                    return Some(ConditionalAttribute {
-                        condition,
-                        attribute: gated_attr_ident.clone(),
-                    });
-                }
-            }
+						return Some(ConditionalAttribute {
+							condition,
+							attribute: gated_attr_ident.clone()
+						});
+					}
+				}
+			}
 		}
 		None
 	}
