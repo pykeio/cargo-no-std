@@ -303,13 +303,11 @@ fn main() -> anyhow::Result<()> {
 	run_check(&matches)?;
 	println!();
 
-	#[cfg(not(target_os = "linux"))]
-	return Ok(());
-
 	#[cfg(target_os = "linux")]
-	if matches.is_present("no-verify") {
+	if !matches.is_present("no-verify") {
 		println!("{}", "Checking crates for std linkage".bright_black());
 		run_verify(&matches)?;
-		Ok(())
 	}
+	
+	Ok(())
 }
