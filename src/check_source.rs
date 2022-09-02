@@ -216,6 +216,10 @@ fn check_source(source_path: &PathBuf, is_main_file: bool) -> CrateSupport {
 				// Test alternative cases to weed out most false negatives.
 				#[rustfmt::skip]
                 let alternative_test_cases: Vec<(&'static str, syn::Attribute)> = vec![
+                    ("std", syn::parse_quote!(#![cfg_attr(any(not(feature = "std"), not(test)), no_std)])),
+                    ("std", syn::parse_quote!(#![cfg_attr(any(not(test), not(feature = "std")), no_std)])),
+                    ("std", syn::parse_quote!(#![cfg_attr(not(any(feature = "std", test)), no_std)])),
+                    ("std", syn::parse_quote!(#![cfg_attr(not(any(test, feature = "std")), no_std)])),
                     // handles `spin` false negative
                     ("std", syn::parse_quote!(#![cfg_attr(all(not(feature = "std"), not(test)), no_std)])),
                     ("std", syn::parse_quote!(#![cfg_attr(all(not(test), not(feature = "std")), no_std)])),
